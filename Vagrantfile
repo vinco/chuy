@@ -3,28 +3,31 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "precise32"
-  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    environments_json_path = "environments.json"
+    vagrant_config = (JSON.parse(File.read(environments_json_path)))['vagrant']
 
-  #provisioning
-  config.vm.provision "shell", path: "cakephp-workflow/provision/preprovision.sh"
-  config.vm.provision "file", source:"cakephp-workflow/provision/templates/", destination: "/home/vagrant/templates/"
-  config.vm.provision "shell", path: "cakephp-workflow/provision/provision.sh"
+    config.vm.box = "precise32"
+    config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
-  # Private IP
-  config.vm.network :private_network, ip: "192.168.33.77"
+    #provisioning
+    config.vm.provision "shell", path: "cakephp-workflow/provision/preprovision.sh"
+    config.vm.provision "file", source:"cakephp-workflow/provision/templates/", destination: "/home/vagrant/templates/"
+    config.vm.provision "shell", path: "cakephp-workflow/provision/provision.sh"
 
-  # Hosts
-  config.vm.hostname = "www.lavadero.local"
-  config.hostsupdater.aliases = ["lavadero.local", "sistemalavadero.local"]
+    # Private IP
+    config.vm.network :private_network, ip: "192.168.33.77"
 
-  # Shared folders.
-  config.vm.synced_folder "lavadero", "/home/vagrant/public_www"
+    # Hosts
+    config.vm.hostname = "www.cakephp-workflow.local"
+    config.hostsupdater.aliases = ["cakephp-workflow.local", vagrant_config['url']]
 
-  # Provider
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 1024
-    v.cpus = 2
-  end
+    # Shared folders.
+    config.vm.synced_folder "app", "/home/vagrant/cakephp-workflow"
+
+    # Provider
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 1024
+        v.cpus = 2
+    end
 
 end

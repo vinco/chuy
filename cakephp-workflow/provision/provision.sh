@@ -12,7 +12,8 @@ apt-get update
 
 PACKAGES="php5 mysql-client mysql-server php5-mysql apache2 tree vim curl"
 PACKAGES="$PACKAGES nginx-full php5-fpm php5-cgi spawn-fcgi php-pear php5-gd libapache2-mod-php5"
-PACKAGES="$PACKAGES php-apc php5-curl php5-mcrypt php5-memcached fcgiwrap php5-mcrypt php5-intl"
+PACKAGES="$PACKAGES php-apc php5-curl php5-mcrypt php5-memcached fcgiwrap php5-mcrypt"
+PACKAGES="$PACKAGES php5-intl"
 
 PUBLIC_DIRECTORY="/home/vagrant/public_www"
 
@@ -28,7 +29,7 @@ apt-get install $PACKAGES --assume-yes
 update-rc.d -f  apache2 remove
 update-rc.d php5-fpm defaults
 
-# Wordpress client and public folder
+# Public folder
 if [ ! -d "$PUBLIC_DIRECTORY" ]; then
     mkdir $PUBLIC_DIRECTORY
 fi
@@ -40,11 +41,6 @@ Installing composer
 curl -sS https://getcomposer.org/installer | php
 chmod +x composer.phar
 mv composer.phar /usr/local/bin/composer
-
-# Installing squizlabs/php_codesniffer & WordPress-Coding-Standards
-composer create-project wp-coding-standards/wpcs:dev-master --no-dev
-ln -s /home/vagrant/wpcs/vendor/bin/phpcs /usr/local/bin/phpcs
-ln -s /home/vagrant/wpcs/vendor/bin/phpcbf /usr/local/bin/phpcbf
 
 # Generates unique token for application
 if [ ! -f "$APP_TOKEN" ]; then
@@ -70,4 +66,3 @@ rm  /etc/nginx/sites-enabled/*
 ln -s /etc/nginx/sites-available/cakephp /etc/nginx/sites-enabled/
 service php5-fpm restart
 service nginx restart
-export WP_ENV=production

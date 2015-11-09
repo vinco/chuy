@@ -1,11 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Wordpress workflow environments",
+    "title": "Cakephp workflow environments",
     "description": "List of environments",
     "type": "object",
     "properties": {
         "url": {
-            "description": "Wordpress URL",
+            "description": "Cakephp URL",
             "type": "string"
         },
         "user": {
@@ -25,7 +25,7 @@
             "minItems": 1,
             "uniqueItems": true
         },
-        "wpworkflow_dir": {
+        "cpworkflow_dir": {
             "description": "server's src directory",
             "type": "string",
             "pattern": "^/.*/$"
@@ -35,36 +35,20 @@
             "type": "string",
             "pattern": "^/.*/$"
         },
-        "title": {
-            "description": "wordpress' title",
-            "type": "string"
-        },
-        "admin_user": {
-            "description": "wordpress' admin username",
-            "type": "string"
-        },
-        "admin_password": {
-            "description": "wordpress' admin password",
-            "type": "string"
-        },
-        "admin_email": {
-            "description": "wordpress' admin email",
-            "type": "string"
-        },
         "dbname": {
-            "description": "wordpress' database name",
+            "description": "cakephp' database name",
             "type": "string"
         },
         "dbuser": {
-            "description": "wordpress' database user",
+            "description": "cakephp' database user",
             "type": "string"
         },
         "dbpassword": {
-            "description": "wordpress' database password",
+            "description": "cakephp' database password",
             "type": "string"
         },
         "dbhost": {
-            "description": "wordpress' datbase host",
+            "description": "cakephp' datbase host",
             "type": "string"
         },
         "command_prefixes": {
@@ -77,8 +61,7 @@
         }
     },
     "required": [
-        "title", "url", "user", "group", "hosts", "public_dir", "wpworkflow_dir",
-        "command_prefixes", "admin_user", "admin_password", "admin_email",
-        "dbname", "dbuser", "dbpassword", "dbhost"
+        "url", "user", "group", "hosts", "public_dir", "cpworkflow_dir",
+        "command_prefixes", "dbname", "dbuser", "dbpassword", "dbhost"
     ]
 }
