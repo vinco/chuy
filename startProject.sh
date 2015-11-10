@@ -10,8 +10,16 @@ if [[ ! -d "$DIR"  ]]; then DIR="$PWD"; fi
 
 echo "Creating directory structure"
 
-if [[ ! -d "$DIR/../src/database" ]]; then
+if [[ ! -d "$DIR/../app" ]]; then
+    mkdir $DIR/../app
+fi
+
+if [[ ! -d "$DIR/../app/database" ]]; then
     mkdir $DIR/../app/database
+fi
+
+if [[ ! -d "$DIR/../app/database" ]]; then
+    mkdir $DIR/../app/webroot
 fi
 
 echo "Setting configuration files"
