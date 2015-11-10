@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     config.hostsupdater.aliases = ["cakephp-workflow.local", vagrant_config['url']]
 
     # Shared folders.
-    config.vm.synced_folder "app", "/home/vagrant/cakephp-workflow"
+    config.vm.synced_folder "app", "/home/vagrant/public_www"
 
     # Provider
     config.vm.provider "virtualbox" do |v|

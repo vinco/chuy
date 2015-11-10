@@ -25,11 +25,6 @@
             "minItems": 1,
             "uniqueItems": true
         },
-        "cpworkflow_dir": {
-            "description": "server's src directory",
-            "type": "string",
-            "pattern": "^/.*/$"
-        },
         "public_dir": {
             "description": "server's public directory",
             "type": "string",
@@ -61,7 +56,7 @@
         }
     },
     "required": [
-        "url", "user", "group", "hosts", "public_dir", "cpworkflow_dir",
+        "url", "user", "group", "hosts", "public_dir",
         "command_prefixes", "dbname", "dbuser", "dbpassword", "dbhost"
     ]
 }

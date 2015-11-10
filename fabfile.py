@@ -73,7 +73,7 @@ def cakephp_install():
     """
     Downloads the cakephp version specified in settings.json and installs the database.
     """
-    require('cpworkflow_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
+    require('public_dir', 'dbname', 'dbuser', 'dbpassword')
 
     print "Downloading cakephp application skeleton..."
     #Downloads Skeleton
@@ -82,36 +82,33 @@ def cakephp_install():
         'mv skeleton/* {public_dir} && '
         'rm -rf skeleton'.format(**env))
 
-    print "Install cakephp version..."
+    cakephp_update()
+
+
+@task
+def cakephp_update():
+    """
+    Downloads the vendor version specified in settings.json.
+    """
+    require('public_dir', 'dbname', 'dbuser', 'dbpassword')
+
+    print "Install cakephp vendor version..."
     run('composer require cakephp/cakephp:"{version}" && '
         'rsync -a vendor/ {public_dir} && '
         'rm -rf vendor/'.format(**env))
-
-#     print "Installing cakephp-workflow..."
-    #Creates simbolic link to themes
-    run('rm -rf {public_dir}src && '
-        'rm -rf {public_dir}config  && '
-        'rm -rf {public_dir}plugins  && '
-        'rm -rf {public_dir}webroot  && '
-        'ln -s {cpworkflow_dir}src {public_dir} '
-        'ln -s {cpworkflow_dir}config {public_dir} '
-        'ln -s {cpworkflow_dir}plugins {public_dir} '
-        'ln -s {cpworkflow_dir}webroot {public_dir}'.format(**env))
-
-
 @task
 def import_data(file_name="data.sql"):
     """
     Imports the database to given file name. database/data.sql by default.
     """
-    require('cpworkflow_dir', 'dbuser', 'dbpassword', 'dbhost')
+    require('dbuser', 'dbpassword', 'dbhost')
 
     env.file_name = file_name
 
     print "Importing data from file: " + blue(file_name, bold=True) + "..."
     run("""
         mysql -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost} <\
-        {cpworkflow_dir}database/{file_name} """.format(**env))
+        {public_dir}database/{file_name} """.format(**env))
 
 
 @task
@@ -119,7 +116,7 @@ def export_data(file_name="data.sql", just_data=False):
     """
     Exports the database to given file name. database/data.sql by default.
     """
-    require('cpworkflow_dir', 'dbuser', 'dbpassword', 'dbname', 'dbhost')
+    require('public_dir', 'dbuser', 'dbpassword', 'dbname', 'dbhost')
 
     export = True
 
@@ -129,10 +126,10 @@ def export_data(file_name="data.sql", just_data=False):
     else:
         env.just_data = " "
 
-    if exists('{cpworkflow_dir}database/{file_name}'.format(**env)):
+    if exists('{public_dir}database/{file_name}'.format(**env)):
         export = confirm(
             yellow(
-                '{cpworkflow_dir}database/{file_name} '.format(**env)
+                '{public_dir}database/{file_name} '.format(**env)
                 +
                 'already exists, Do you want to overwrite it?'
             )
@@ -143,7 +140,7 @@ def export_data(file_name="data.sql", just_data=False):
         run(
             """
             mysqldump -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost}\
-            {just_data} > {cpworkflow_dir}database/{file_name}
+            {just_data} > {public_dir}database/{file_name}
             """.format(**env)
         )
     else:
@@ -181,21 +178,15 @@ def sync_files():
     """
     Sync modified files and establish necessary permissions in selected environment.
     """
-    require('group', 'cpworkflow_dir', 'public_dir')
+    require('group', 'public_dir')
 
     print white("Uploading code to server...", bold=True)
     ursync_project(
         local_dir='./app/',
-        remote_dir=env.cpworkflow_dir,
+        remote_dir=env.public_dir,
         delete=True,
         default_opts='-chrtvzP'
     )
-
-    print white("Estableciendo permisos...", bold=True)
-    run('chmod -R o-rwx {0}'.format(env.cpworkflow_dir))
-    run('chmod -R o-rwx {0}'.format(env.public_dir))
-    run('chgrp -R {0} {1}'.format(env.group, env.cpworkflow_dir))
-    run('chgrp -R {0} {1}'.format(env.group, env.public_dir))
 
     print green(u'Successfully sync.')
 
@@ -230,7 +221,7 @@ def backup(tarball_name='backup', just_data=False):
     """
     Generates a backup copy of database
     """
-    require('cpworkflow_dir', 'public_dir')
+    require('public_dir')
 
     env.tarball_name = tarball_name
 
@@ -241,23 +232,23 @@ def backup(tarball_name='backup', just_data=False):
     if not os.path.exists('./backup/'):
         os.makedirs('./backup/')
 
-    if exists('{cpworkflow_dir}backup/'):
-        run('rm -rf {cpworkflow}backup/')
+    if exists('{public_dir}backup/'):
+        run('rm -rf {public_dir}backup/')
 
-    if not exists('{cpworkflow_dir}backup/'.format(**env)):
-        run('mkdir {cpworkflow_dir}backup/'.format(**env))
+    if not exists('{public_dir}backup/'.format(**env)):
+        run('mkdir {public_dir}backup/'.format(**env))
 
-    if not exists('{cpworkflow_dir}backup/database/'.format(**env)):
-        run('mkdir {cpworkflow_dir}backup/database/'.format(**env))
+    if not exists('{public_dir}backup/database/'.format(**env)):
+        run('mkdir {public_dir}backup/database/'.format(**env))
 
     run(
-        'mv {cpworkflow_dir}/database/{tarball_name}.sql '.format(**env)
+        'mv {public_dir}/database/{tarball_name}.sql '.format(**env)
         +
-        '{cpworkflow_dir}/backup/database/'.format(**env)
+        '{public_dir}/backup/database/'.format(**env)
     )
 
     print 'Creating tarball...'
-    with cd(env.cpworkflow_dir):
+    with cd(env.public_dir):
         urun('tar -czf {tarball_name}.tar.gz backup/*'.format(**env))
 
     print 'Downloading backup...'
@@ -273,15 +264,15 @@ def backup(tarball_name='backup', just_data=False):
 
     if download:
         get(
-            '{cpworkflow_dir}{tarball_name}.tar.gz'.format(**env),
+            '{public_dir}{tarball_name}.tar.gz'.format(**env),
             './backup/{tarball_name}.tar.gz'.format(**env)
         )
     else:
         print red('Backup canceled by user')
 
     print 'Cleaning working directory...'
-    run('rm -rf {cpworkflow_dir}backup/'.format(**env))
-    run('rm {cpworkflow_dir}{tarball_name}.tar.gz'.format(**env))
+    run('rm -rf {public_dir}backup/'.format(**env))
+    run('rm {public_dir}{tarball_name}.tar.gz'.format(**env))
 
     if download:
         print green(
