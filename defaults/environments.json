@@ -5,6 +5,7 @@
         "group": "vagrant",
         "hosts": ["127.0.0.1:2222"],
         "public_dir": "/home/vagrant/public_www/",
+        "cpworkflow_dir": "/home/vagrant/cakephp-workflow/",
         "command_prefixes": [],
         "dbname": "cakephp_workflow",
         "dbuser": "root",

@@ -22,7 +22,9 @@ Vagrant.configure("2") do |config|
     config.hostsupdater.aliases = ["cakephp-workflow.local", vagrant_config['url']]
 
     # Shared folders.
-    config.vm.synced_folder "app", "/home/vagrant/public_www"
+    config.nfs.map_uid = Process.uid
+    config.nfs.map_gid = Process.gid
+    config.vm.synced_folder "app", "/home/vagrant/public_www", id: "vagrant-root", :nfs => true
 
     # Provider
     config.vm.provider "virtualbox" do |v|

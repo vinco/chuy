@@ -73,7 +73,7 @@ def cakephp_install():
     """
     Downloads the cakephp version specified in settings.json and installs the database.
     """
-    require('public_dir', 'dbname', 'dbuser', 'dbpassword')
+    require('cpworkflow_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
 
     print "Downloading cakephp application skeleton..."
     #Downloads Skeleton
