@@ -19,7 +19,7 @@ def environment(env_name, debug=False):
     """
     Creates the configurations for the environment in which tasks will run.
     """
-    schemas_dir = "cakephp-workflow/json_schemas/"
+    schemas_dir = "chuy/json_schemas/"
     state.output['running'] = boolean(debug)
     state.output['stdout'] = boolean(debug)
     print "Establishing environment " + blue(env_name, bold=True) + "..."
@@ -73,7 +73,7 @@ def cakephp_install():
     """
     Downloads the cakephp version specified in settings.json and installs the database.
     """
-    require('cpworkflow_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
+    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
 
     print "Downloading cakephp application skeleton..."
     #Downloads Skeleton
@@ -201,7 +201,7 @@ def set_webserver(webserver="nginx"):
     if webserver == "apache2":
         sudo("service nginx stop")
         sudo("a2enmod rewrite")
-        with open('cakephp-workflow/defaults/htaccess') as htaccess:
+        with open('chuy/defaults/htaccess') as htaccess:
             urun(" echo '{0}' > {1}.htaccess".
                  format(htaccess.read(), env.public_dir))
 

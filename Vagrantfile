@@ -10,16 +10,16 @@ Vagrant.configure("2") do |config|
     config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
     #provisioning
-    config.vm.provision "shell", path: "cakephp-workflow/provision/preprovision.sh"
-    config.vm.provision "file", source:"cakephp-workflow/provision/templates/", destination: "/home/vagrant/templates/"
-    config.vm.provision "shell", path: "cakephp-workflow/provision/provision.sh"
+    config.vm.provision "shell", path: "chuy/provision/preprovision.sh"
+    config.vm.provision "file", source:"chuy/provision/templates/", destination: "/home/vagrant/templates/"
+    config.vm.provision "shell", path: "chuy/provision/provision.sh"
 
     # Private IP
     config.vm.network :private_network, ip: "192.168.33.77"
 
     # Hosts
-    config.vm.hostname = "www.cakephp-workflow.local"
-    config.hostsupdater.aliases = ["cakephp-workflow.local", vagrant_config['url']]
+    config.vm.hostname = "www.chuy.local"
+    config.hostsupdater.aliases = ["chuy.local", vagrant_config['url']]
 
     # Shared folders.
     config.nfs.map_uid = Process.uid

@@ -1,11 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Wordpress workflow settings",
-    "description": "wordpress' project wide settings",
+    "title": "Chuy settings",
+    "description": "chuy' project wide settings",
     "type": "object",
     "properties": {
         "version": {
-            "description": "wordpress' version",
+            "description": "cakephp' version",
             "type": "string"
         },
         "locale": {

@@ -1,11 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Cakephp workflow environments",
+    "title": "Chuy environments",
     "description": "List of environments",
     "type": "object",
     "properties": {
         "url": {
-            "description": "Cakephp URL",
+            "description": "Chuy URL",
             "type": "string"
         },
         "user": {
@@ -30,7 +30,7 @@
             "type": "string",
             "pattern": "^/.*/$"
         },
-        "cpworkflow_dir": {
+        "cpchuy_dir": {
             "description": "server's src directory",
             "type": "string",
             "pattern": "^/.*/$"
@@ -61,7 +61,7 @@
         }
     },
     "required": [
-        "url", "user", "group", "hosts", "public_dir", "cpworkflow_dir",
+        "url", "user", "group", "hosts", "public_dir", "cpchuy_dir",
         "command_prefixes", "dbname", "dbuser", "dbpassword", "dbhost"
     ]
 }
