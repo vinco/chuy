@@ -76,13 +76,12 @@ def cakephp_install():
     require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
 
     print "Downloading cakephp application skeleton..."
+    run('rm -rf {public_dir}*'.format(**env))
+    run('find {public_dir} -name ".*" -delete'.format(**env))
     #Downloads Skeleton
-    run('composer create-project --prefer-dist cakephp/app skeleton && '
-        'rm -rf {public_dir}* && '
-        'mv skeleton/* {public_dir} && '
-        'rm -rf skeleton'.format(**env))
+    run('composer create-project --prefer-dist cakephp/app public_www/.'.format(**env))
 
-    cakephp_update()
+#     cakephp_update()
 
 
 @task
@@ -93,9 +92,8 @@ def cakephp_update():
     require('public_dir', 'dbname', 'dbuser', 'dbpassword')
 
     print "Install cakephp vendor version..."
-    run('composer require cakephp/cakephp:"{version}" && '
-        'rsync -a vendor/ {public_dir} && '
-        'rm -rf vendor/'.format(**env))
+    with cd('{public_dir}'.format(**env)):
+        run('composer require cakephp/cakephp:"{version}"'.format(**env))
 @task
 def import_data(file_name="data.sql"):
     """
@@ -169,7 +167,8 @@ def reset_all():
     """
     require('public_dir')
     print "Deleting directory content: " + blue(env.public_dir, bold=True) + "..."
-    run("""rm -rf {0}*""".format(env.public_dir))
+    run('rm -rf {public_dir}*'.format(**env))
+    run('find {public_dir} -name ".*" -delete'.format(**env))
     resetdb()
 
 
