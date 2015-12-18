@@ -15,7 +15,7 @@ from fabutils.tasks import ursync_project, ulocal, urun
 
 
 @task
-def environment(env_name, debug=False):
+def environment(env_name, debug=True):
     """
     Creates the configurations for the environment in which tasks will run.
     """
@@ -67,6 +67,8 @@ def bootstrap():
     # Enables apache module
     run('sudo a2enmod rewrite')
 
+    cakephp_install()
+
 
 @task
 def cakephp_install():
@@ -81,7 +83,12 @@ def cakephp_install():
     #Downloads Skeleton
     run('composer create-project --prefer-dist cakephp/app public_www/.'.format(**env))
 
-#     cakephp_update()
+    run("sed -i \"218s/'username' => '.*'/'username' => '{dbuser}'/g\" {public_dir}config/app.php".format(**env))
+    run("sed -i \"219s/'password' => '.*'/'password' => '{dbpassword}'/g\" {public_dir}config/app.php".format(**env))
+    run("sed -i \"220s/'database' => '.*'/'database' => '{dbname}'/g\" {public_dir}config/app.php".format(**env))
+
+    run("mkdir {public_dir}database".format(**env))
+    cakephp_update()
 
 
 @task
@@ -279,3 +286,10 @@ def backup(tarball_name='backup', just_data=False):
             +
             ' ./backup/{tarball_name}.tar.gz'.  format(**env)
         )
+
+
+@task
+def bake(command=""):
+    env.command = command
+    with cd('{public_dir}bin'.format(**env)):
+        run('./cake bake {command}'.format(**env))
