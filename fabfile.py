@@ -67,7 +67,21 @@ def bootstrap():
     # Enables apache module
     run('sudo a2enmod rewrite')
 
-    cakephp_install()
+    framework = ""
+    while framework == "":
+        print("Select option:")
+        option  = raw_input("1) CakePHP\n2) Drupal\n")
+
+        if option == "1":
+            framework = "cakephp"
+            set_vhost(framework)
+        if option == "2":
+            framework = "drupal"
+            set_vhost(framework)
+
+    option  = raw_input("Install nodejs(y/n):\n")
+    if option == "y" or option == "Y":
+        nodejs_install()
 
 
 @task
@@ -88,19 +102,50 @@ def cakephp_install():
     run("sed -i \"220s/'database' => '.*'/'database' => '{dbname}'/g\" {public_dir}config/app.php".format(**env))
 
     run("mkdir {public_dir}database".format(**env))
-    cakephp_update()
 
 
 @task
-def cakephp_update():
+def set_vhost(template="cakephp"):
     """
-    Downloads the vendor version specified in settings.json.
+    Downloads the cakephp version specified in settings.json and installs the database.
     """
-    require('public_dir', 'dbname', 'dbuser', 'dbpassword')
+    print "Update template..."
+
+    if template == "cakephp":
+        run("sudo cp /home/vagrant/templates/cakephp.nginx /etc/nginx/sites-available/chuy")
+        run("sudo service nginx restart")
+
+    if template == "drupal":
+        run("sudo cp /home/vagrant/templates/drupal.nginx /etc/nginx/sites-available/chuy")
+        run("sudo service nginx restart")
+
+
+@task
+def nodejs_install():
+    """
+    Install node, grount, bower
+    """
+    require('public_dir')
 
     print "Install cakephp vendor version..."
-    with cd('{public_dir}'.format(**env)):
-        run('composer require cakephp/cakephp:"{version}"'.format(**env))
+    run('sudo apt-get install software-properties-common')
+    run('sudo apt-get install python-software-properties')
+    run('sudo apt-add-repository ppa:chris-lea/node.js')
+    run('sudo apt-get update')
+
+    run('sudo apt-get install -y nodejs')
+
+    run('sudo npm install -g bower')
+
+    run('sudo npm -g install grunt')
+    run('sudo npm install -g grunt-cli')
+    run('sudo chown -R vagrant:vagrant /usr/lib/node_modules')
+    run('sudo chown -R vagrant:vagrant /home/vagrant/.npm')
+
+    run('sudo gem install compass')
+    run('sudo gem install sass')
+
+
 @task
 def import_data(file_name="data.sql"):
     """

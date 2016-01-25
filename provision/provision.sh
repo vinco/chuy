@@ -10,7 +10,7 @@ apt-get update
 
 # Configurations
 
-PACKAGES="php5 mysql-client mysql-server php5-mysql apache2 tree vim curl"
+PACKAGES="php5 mysql-client mysql-server php5-mysql apache2 tree vim curl git"
 PACKAGES="$PACKAGES nginx-full php5-fpm php5-cgi spawn-fcgi php-pear php5-gd libapache2-mod-php5"
 PACKAGES="$PACKAGES php-apc php5-curl php5-mcrypt php5-memcached fcgiwrap php5-mcrypt"
 PACKAGES="$PACKAGES php5-intl"
@@ -58,11 +58,11 @@ a2ensite cakephp
 service apache2 stop
 
 # Nginx
-cp /home/vagrant/templates/cakephp.nginx /etc/nginx/sites-available/cakephp
+cp /home/vagrant/templates/cakephp.nginx /etc/nginx/sites-available/chuy
 cp /home/vagrant/templates/www.conf /etc/php5/fpm/pool.d/www.conf
 cp /home/vagrant/templates/nginx.conf /etc/nginx/nginx.conf
 cp /home/vagrant/templates/nginx.conf /home/vagrant/nginx.conf
 rm  /etc/nginx/sites-enabled/*
-ln -s /etc/nginx/sites-available/cakephp /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/chuy /etc/nginx/sites-enabled/
 service php5-fpm restart
 service nginx restart

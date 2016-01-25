@@ -44,7 +44,7 @@ echo "writing new values to .gitigonre"
 
 if [[ ! -f  "$DIR/../.gitignore" ]]; then
     cat $DIR/defaults/git.gitignore >> $DIR/../.gitignore
-else 
+else
     while read line
     do
         if ! grep -q "$line"  "$DIR/../.gitignore"; then
@@ -55,4 +55,3 @@ fi
 
 
 cd $DIR/../
-vagrant up
