@@ -338,3 +338,10 @@ def bake(command=""):
     env.command = command
     with cd('{public_dir}bin'.format(**env)):
         run('./cake bake {command}'.format(**env))
+
+
+@task
+def execute(command=""):
+    env.command = command
+    with cd('{public_dir}'.format(**env)):
+        run('{command}'.format(**env))
