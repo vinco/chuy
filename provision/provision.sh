@@ -50,7 +50,7 @@ fi
 # Activates site
 
 # Apache
-cp /home/vagrant/templates/cakephp.apache /etc/apache2/sites-available/cakephp
+cp /home/vagrant/templates/default.apache /etc/apache2/sites-available/chuy
 cp /home/vagrant/templates/httpd.conf /etc/apache2/conf.d/httpd.conf
 a2enmod actions
 a2dissite default
@@ -58,7 +58,7 @@ a2ensite cakephp
 service apache2 stop
 
 # Nginx
-cp /home/vagrant/templates/cakephp.nginx /etc/nginx/sites-available/chuy
+cp /home/vagrant/templates/default.nginx /etc/nginx/sites-available/chuy
 cp /home/vagrant/templates/www.conf /etc/php5/fpm/pool.d/www.conf
 cp /home/vagrant/templates/nginx.conf /etc/nginx/nginx.conf
 cp /home/vagrant/templates/nginx.conf /home/vagrant/nginx.conf

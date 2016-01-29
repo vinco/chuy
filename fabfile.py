@@ -70,8 +70,11 @@ def bootstrap():
     framework = ""
     while framework == "":
         print("Select option:")
-        option  = raw_input("1) CakePHP\n2) Drupal\n")
+        option  = raw_input("0) Default\n1) CakePHP\n2) Drupal\n")
 
+        if option == "0":
+            framework = "default"
+            set_vhost(framework)
         if option == "1":
             framework = "cakephp"
             set_vhost(framework)
@@ -112,12 +115,13 @@ def set_vhost(template="cakephp"):
     print "Update template..."
 
     if template == "cakephp":
+        run("sudo cp /home/vagrant/templates/default.nginx /etc/nginx/sites-available/chuy")
+    if template == "cakephp":
         run("sudo cp /home/vagrant/templates/cakephp.nginx /etc/nginx/sites-available/chuy")
-        run("sudo service nginx restart")
-
     if template == "drupal":
         run("sudo cp /home/vagrant/templates/drupal.nginx /etc/nginx/sites-available/chuy")
-        run("sudo service nginx restart")
+
+    run("sudo service nginx restart")
 
 
 @task
