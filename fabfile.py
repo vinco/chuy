@@ -82,10 +82,6 @@ def bootstrap():
             framework = "symfony"
             set_vhost(framework)
 
-    option  = raw_input("Install nodejs(y/n):\n")
-    if option == "y" or option == "Y":
-        nodejs_install()
-
 
 @task
 def cakephp_install():

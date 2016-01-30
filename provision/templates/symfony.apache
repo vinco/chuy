@@ -6,7 +6,7 @@
         Options FollowSymLinks
         AllowOverride None
     </Directory>
-    <Directory /home/vagrant/public_www/webroot/ >
+    <Directory /home/vagrant/public_www/web/ >
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
