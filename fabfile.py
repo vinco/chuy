@@ -15,7 +15,7 @@ from fabutils.tasks import ursync_project, ulocal, urun
 
 
 @task
-def environment(env_name, debug=True):
+def environment(env_name, debug=False):
     """
     Creates the configurations for the environment in which tasks will run.
     """
@@ -75,12 +75,22 @@ def bootstrap():
         if option == "0":
             framework = "default"
             set_vhost(framework)
+
         if option == "1":
             framework = "cakephp"
             set_vhost(framework)
+            #Install new proyect
+            option  = raw_input("Install new project(Y/n):\n")
+            if option == "y" or option == "Y":
+                cakephp_install()
+
         if option == "2":
             framework = "symfony"
             set_vhost(framework)
+            #Install new proyect
+            option  = raw_input("Install new project(Y/n):\n")
+            if option == "y" or option == "Y":
+                symfony_install()
 
 
 @task
@@ -88,17 +98,40 @@ def cakephp_install():
     """
     Downloads the cakephp version specified in settings.json and installs the database.
     """
-    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
+    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
 
-    print "Downloading cakephp application skeleton..."
+    print "Delete project..."
     run('rm -rf {public_dir}*'.format(**env))
     run('find {public_dir} -name ".*" -delete'.format(**env))
     #Downloads Skeleton
+    print "Downloading cakephp application skeleton..."
+    state.output['stdout'] = True
     run('composer create-project --prefer-dist cakephp/app public_www/.'.format(**env))
+    #Set Version
+    with cd('{public_dir}'.format(**env)):
+         run('composer require cakephp/cakephp:"{version}"'.format(**env))
 
     run("sed -i \"218s/'username' => '.*'/'username' => '{dbuser}'/g\" {public_dir}config/app.php".format(**env))
     run("sed -i \"219s/'password' => '.*'/'password' => '{dbpassword}'/g\" {public_dir}config/app.php".format(**env))
     run("sed -i \"220s/'database' => '.*'/'database' => '{dbname}'/g\" {public_dir}config/app.php".format(**env))
+
+    run("mkdir {public_dir}database".format(**env))
+
+
+@task
+def symfony_install():
+    """
+    Downloads the Symfony version specified in settings.json and installs the database.
+    """
+    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
+
+    print "Delete project..."
+    run('rm -rf {public_dir}*'.format(**env))
+    run('find {public_dir} -name ".*" -delete'.format(**env))
+    #Downloads Symfony
+    state.output['stdout'] = True
+    print "Downloading Symfony..."
+    run('composer create-project symfony/framework-standard-edition public_www "{version}"'.format(**env))
 
     run("mkdir {public_dir}database".format(**env))
 
@@ -336,6 +369,7 @@ def backup(tarball_name='backup', just_data=False):
 @task
 def bake(command=""):
     env.command = command
+    state.output['stdout'] = True
     with cd('{public_dir}bin'.format(**env)):
         run('./cake bake {command}'.format(**env))
 
@@ -343,5 +377,6 @@ def bake(command=""):
 @task
 def execute(command=""):
     env.command = command
+    state.output['stdout'] = True
     with cd('{public_dir}'.format(**env)):
         run('{command}'.format(**env))
