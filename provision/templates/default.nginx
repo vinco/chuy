@@ -11,10 +11,6 @@ server {
         try_files $uri $uri/ /index.php?$args;
     }
 
-    location ~ /(\.|wp-config.php|readme.html|license.txt|licencia.txt) {
-        return 404;
-    }
-
     location ~ \.php$ {
         try_files $uri =404;
         fastcgi_pass unix:/var/run/php5-fpm.sock;

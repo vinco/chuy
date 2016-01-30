@@ -69,8 +69,8 @@ def bootstrap():
 
     framework = ""
     while framework == "":
-        print("Select option:")
-        option  = raw_input("0) Default\n1) CakePHP\n2) Symfony\n")
+        print("Select project:")
+        option  = raw_input("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n>>")
 
         if option == "0":
             framework = "default"
@@ -80,7 +80,7 @@ def bootstrap():
             framework = "cakephp"
             set_vhost(framework)
             #Install new proyect
-            option  = raw_input("Install new project(Y/n):\n")
+            option  = raw_input("Install new project(Y/n):\n>>")
             if option == "y" or option == "Y":
                 cakephp_install()
 
@@ -88,9 +88,17 @@ def bootstrap():
             framework = "symfony"
             set_vhost(framework)
             #Install new proyect
-            option  = raw_input("Install new project(Y/n):\n")
+            option  = raw_input("Install new project(Y/n):\n>>")
             if option == "y" or option == "Y":
                 symfony_install()
+
+        if option == "3":
+            framework = "laravel"
+            set_vhost(framework)
+            #Install new proyect
+            option  = raw_input("Install new project(Y/n):\n>>")
+            if option == "y" or option == "Y":
+                laravel_install()
 
 
 @task
@@ -137,19 +145,32 @@ def symfony_install():
 
 
 @task
+def laravel_install():
+    """
+    Downloads the Laravel version specified in settings.json and installs the database.
+    """
+    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
+
+    print "Delete project..."
+    run('rm -rf {public_dir}*'.format(**env))
+    run('find {public_dir} -name ".*" -delete'.format(**env))
+    #Downloads Laravel
+    state.output['stdout'] = True
+    print "Downloading Laravel..."
+    run('composer create-project --prefer-dist laravel/laravel public_www'.format(**env))
+
+    run("mkdir {public_dir}database".format(**env))
+
+
+@task
 def set_vhost(template="cakephp"):
     """
     Downloads the cakephp version specified in settings.json and installs the database.
     """
     print "Update template..."
 
-    if template == "cakephp":
-        run("sudo cp /home/vagrant/templates/default.nginx /etc/nginx/sites-available/chuy")
-    if template == "cakephp":
-        run("sudo cp /home/vagrant/templates/cakephp.nginx /etc/nginx/sites-available/chuy")
-    if template == "symfony":
-        run("sudo cp /home/vagrant/templates/symfony.nginx /etc/nginx/sites-available/chuy")
-
+    env.template = template
+    run("sudo cp /home/vagrant/templates/{template}.nginx /etc/nginx/sites-available/chuy".format(**env))
     run("sudo service nginx restart")
 
 
