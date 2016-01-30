@@ -104,7 +104,7 @@ def bootstrap():
 @task
 def cakephp_install():
     """
-    Downloads the cakephp version specified in settings.json and installs the database.
+    Downloads the cakephp/app (Skeleton) version specified in settings.json and installs the database.
     """
     require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
 
@@ -114,10 +114,7 @@ def cakephp_install():
     #Downloads Skeleton
     print "Downloading cakephp application skeleton..."
     state.output['stdout'] = True
-    run('composer create-project --prefer-dist cakephp/app public_www/.'.format(**env))
-    #Set Version
-    with cd('{public_dir}'.format(**env)):
-         run('composer require cakephp/cakephp:"{version}"'.format(**env))
+    run('composer create-project --prefer-dist cakephp/app public_www "{version}"'.format(**env))
 
     run("sed -i \"218s/'username' => '.*'/'username' => '{dbuser}'/g\" {public_dir}config/app.php".format(**env))
     run("sed -i \"219s/'password' => '.*'/'password' => '{dbpassword}'/g\" {public_dir}config/app.php".format(**env))

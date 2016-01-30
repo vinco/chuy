@@ -34,9 +34,6 @@ if [ ! -d "$PUBLIC_DIRECTORY" ]; then
     mkdir $PUBLIC_DIRECTORY
 fi
 
-chown -R vagrant $PUBLIC_DIRECTORY
-chgrp -R vagrant $PUBLIC_DIRECTORY
-
 Installing composer
 curl -sS https://getcomposer.org/installer | php
 chmod +x composer.phar
