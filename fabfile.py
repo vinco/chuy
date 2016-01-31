@@ -74,42 +74,41 @@ def bootstrap():
 
         if option == "0":
             framework = "default"
-            set_vhost(framework)
+            _set_vhost(framework)
 
         if option == "1":
             framework = "cakephp"
-            set_vhost(framework)
+            _set_vhost(framework)
             #Install new proyect
             option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
-                cakephp_install()
+                _cakephp_install()
 
         if option == "2":
             framework = "symfony"
-            set_vhost(framework)
+            _set_vhost(framework)
             #Install new proyect
             option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
-                symfony_install()
+                _symfony_install()
 
         if option == "3":
             framework = "laravel"
-            set_vhost(framework)
+            _set_vhost(framework)
             #Install new proyect
             option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
-                laravel_install()
+                _laravel_install()
         if option == "4":
             framework = "drupal"
-            set_vhost(framework)
+            _set_vhost(framework)
             #Install new proyect
             option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
-                drupal_install()
+                _drupal_install()
 
 
-@task
-def cakephp_install():
+def _cakephp_install():
     """
     Downloads the cakephp/app (Skeleton) version specified in settings.json and installs the database.
     """
@@ -130,8 +129,7 @@ def cakephp_install():
     run("mkdir {public_dir}database".format(**env))
 
 
-@task
-def symfony_install():
+def _symfony_install():
     """
     Downloads the Symfony version specified in settings.json and installs the database.
     """
@@ -148,8 +146,7 @@ def symfony_install():
     run("mkdir {public_dir}database".format(**env))
 
 
-@task
-def laravel_install():
+def _laravel_install():
     """
     Downloads the Laravel version specified in settings.json and installs the database.
     """
@@ -166,8 +163,7 @@ def laravel_install():
     run("mkdir {public_dir}database".format(**env))
 
 
-@task
-def drupal_install():
+def _drupal_install():
     """
     Downloads the Drupal version specified in settings.json and installs the database.
     """
@@ -187,8 +183,7 @@ def drupal_install():
     run("mkdir {public_dir}database".format(**env))
 
 
-@task
-def set_vhost(template="cakephp"):
+def _set_vhost(template="cakephp"):
     """
     Downloads the cakephp version specified in settings.json and installs the database.
     """
@@ -410,14 +405,6 @@ def backup(tarball_name='backup', just_data=False):
             +
             ' ./backup/{tarball_name}.tar.gz'.  format(**env)
         )
-
-
-@task
-def bake(command=""):
-    env.command = command
-    state.output['stdout'] = True
-    with cd('{public_dir}bin'.format(**env)):
-        run('./cake bake {command}'.format(**env))
 
 
 @task
