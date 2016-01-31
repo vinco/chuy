@@ -6,6 +6,9 @@ Vagrant.configure("2") do |config|
     environments_json_path = "environments.json"
     vagrant_config = (JSON.parse(File.read(environments_json_path)))['vagrant']
 
+    settings_json_path = "settings.json"
+    vagrant_settings = (JSON.parse(File.read(settings_json_path)))
+
     config.vm.box = "precise32"
     config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
@@ -24,7 +27,7 @@ Vagrant.configure("2") do |config|
     # Shared folders.
     config.nfs.map_uid = Process.uid
     config.nfs.map_gid = Process.gid
-    config.vm.synced_folder "app", "/home/vagrant/public_www", id: "vagrant-root", :nfs => true
+    config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root", :nfs => true
 
     # Provider
     config.vm.provider "virtualbox" do |v|

@@ -4,14 +4,18 @@
     "description": "chuy' project wide settings",
     "type": "object",
     "properties": {
+        "src": {
+            "description": "source folder",
+            "type": "string"
+        },
         "version": {
-            "description": "cakephp' version",
+            "description": "project version",
             "type": "string"
         },
         "locale": {
-            "description": "wordpress' languaje setting",
+            "description": "languaje setting",
             "type": "string"
         }
     },
-    "required": [ "version", "locale" ]
+    "required": [ "src", "version", "locale" ]
 }
