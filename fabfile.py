@@ -69,8 +69,8 @@ def bootstrap():
 
     framework = ""
     while framework == "":
-        print("Select project:")
-        option  = raw_input("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n>>")
+        print blue("Select project:")
+        option  = raw_input( blue("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n4) Drupal\n>>") )
 
         if option == "0":
             framework = "default"
@@ -80,7 +80,7 @@ def bootstrap():
             framework = "cakephp"
             set_vhost(framework)
             #Install new proyect
-            option  = raw_input("Install new project(Y/n):\n>>")
+            option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
                 cakephp_install()
 
@@ -88,7 +88,7 @@ def bootstrap():
             framework = "symfony"
             set_vhost(framework)
             #Install new proyect
-            option  = raw_input("Install new project(Y/n):\n>>")
+            option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
                 symfony_install()
 
@@ -96,9 +96,16 @@ def bootstrap():
             framework = "laravel"
             set_vhost(framework)
             #Install new proyect
-            option  = raw_input("Install new project(Y/n):\n>>")
+            option  = raw_input( blue("Install new project(Y/n):") )
             if option == "y" or option == "Y":
                 laravel_install()
+        if option == "4":
+            framework = "drupal"
+            set_vhost(framework)
+            #Install new proyect
+            option  = raw_input( blue("Install new project(Y/n):") )
+            if option == "y" or option == "Y":
+                drupal_install()
 
 
 @task
@@ -155,6 +162,27 @@ def laravel_install():
     state.output['stdout'] = True
     print "Downloading Laravel..."
     run('composer create-project --prefer-dist laravel/laravel public_www'.format(**env))
+
+    run("mkdir {public_dir}database".format(**env))
+
+
+@task
+def drupal_install():
+    """
+    Downloads the Drupal version specified in settings.json and installs the database.
+    """
+    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
+
+    print "Delete project..."
+    run('rm -rf {public_dir}*'.format(**env))
+    run('find {public_dir} -name ".*" -delete'.format(**env))
+    #Downloads Laravel
+    print "Downloading Drupal..."
+    with cd(env.public_dir):
+        urun('wget https://github.com/drupal/drupal/archive/{version}.tar.gz'.format(**env))
+        urun('tar -xzvf {version}.tar.gz'.format(**env))
+        urun('mv drupal-{version}/* .'.format(**env))
+        urun('rm -rf drupal-{version}'.format(**env))
 
     run("mkdir {public_dir}database".format(**env))
 
