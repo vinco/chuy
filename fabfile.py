@@ -413,3 +413,34 @@ def execute(command=""):
     state.output['stdout'] = True
     with cd('{public_dir}'.format(**env)):
         run('{command}'.format(**env))
+
+
+@task
+def php_version():
+    select = True
+    while select:
+        print blue("Select version:")
+        option  = raw_input( blue("0) PHP 5.4\n1) PHP 5.5\n2) PHP 5.6\n>>") )
+
+        if option == "0":
+            select = False
+            print "Installing php 5.4..."
+            state.output['stdout'] = True
+            run('sudo apt-get remove -y libapache2-mod-php5')
+            run('sudo add-apt-repository ppa:ondrej/php5-oldstable')
+        if option == "1":
+            select = False
+            print "Installing php 5.5..."
+            state.output['stdout'] = True
+            run('sudo apt-get remove -y libapache2-mod-php5')
+            run('sudo add-apt-repository ppa:ondrej/php5')
+        if option == "2":
+            select = False
+            print "Installing php 5.6..."
+            state.output['stdout'] = True
+            run('sudo apt-get remove -y libapache2-mod-php5')
+            run('sudo add-apt-repository ppa:ondrej/php5-5.6')
+
+    run('sudo apt-get update')
+    run('sudo apt-get install php5')
+    run('sudo apt-get install libapache2-mod-php5')
