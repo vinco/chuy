@@ -326,17 +326,17 @@ def reset_all():
 
 
 @task
-def sync_files():
+def sync_files(delete=False):
     """
     Sync modified files and establish necessary permissions in selected environment.
     """
-    require('group', 'public_dir')
+    require('group', 'public_dir', 'src')
 
     print white("Uploading code to server...", bold=True)
     ursync_project(
-        local_dir='./app/',
+        local_dir='./{src}/'.format(**env),
         remote_dir=env.public_dir,
-        delete=True,
+        delete=delete,
         default_opts='-chrtvzP'
     )
 
