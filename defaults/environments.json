@@ -11,5 +11,6 @@
         "dbuser": "root",
         "dbpassword": "password",
         "dbhost": "localhost"
+        "exclude": []
     }
 }

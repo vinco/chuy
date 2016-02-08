@@ -330,15 +330,18 @@ def sync_files(delete=False):
     """
     Sync modified files and establish necessary permissions in selected environment.
     """
-    require('group', 'public_dir', 'src')
+    require('group', 'public_dir', 'src', 'exclude')
 
     print white("Uploading code to server...", bold=True)
     ursync_project(
         local_dir='./{src}/'.format(**env),
         remote_dir=env.public_dir,
+        exclude='./{exclude}/'.format(**env),
         delete=delete,
         default_opts='-chrtvzP'
     )
+    print white("Estableciendo permisos...", bold=True)
+    run('chgrp -R {0} {1}'.format(env.group, env.public_dir))
 
     print green(u'Successfully sync.')
 

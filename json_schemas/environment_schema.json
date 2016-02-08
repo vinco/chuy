@@ -36,20 +36,28 @@
             "pattern": "^/.*/$"
         },
         "dbname": {
-            "description": "cakephp' database name",
+            "description": "proyect' database name",
             "type": "string"
         },
         "dbuser": {
-            "description": "cakephp' database user",
+            "description": "proyect' database user",
             "type": "string"
         },
         "dbpassword": {
-            "description": "cakephp' database password",
+            "description": "proyect' database password",
             "type": "string"
         },
         "dbhost": {
-            "description": "cakephp' datbase host",
+            "description": "proyect' datbase host",
             "type": "string"
+        },
+        "exclude": {
+            "description": "sync exclude",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
         },
         "command_prefixes": {
             "description": "command prefixes' list",
@@ -62,6 +70,7 @@
     },
     "required": [
         "url", "user", "group", "hosts", "public_dir", "cpchuy_dir",
-        "command_prefixes", "dbname", "dbuser", "dbpassword", "dbhost"
+        "command_prefixes", "dbname", "dbuser", "dbpassword", "dbhost",
+        "exclude"
     ]
 }
