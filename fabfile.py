@@ -70,7 +70,7 @@ def bootstrap():
     framework = ""
     while framework == "":
         print blue("Select project:")
-        option  = raw_input( blue("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n4) Drupal\n>>") )
+        option  = raw_input( blue("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n4) Drupal\n5) Prestashop\n>>") )
 
         if option == "0":
             framework = "default"
@@ -80,7 +80,7 @@ def bootstrap():
             framework = "cakephp"
             _set_vhost(framework)
             #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n):") )
+            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
             if option == "y" or option == "Y":
                 _cakephp_install()
 
@@ -88,7 +88,7 @@ def bootstrap():
             framework = "symfony"
             _set_vhost(framework)
             #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n):") )
+            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
             if option == "y" or option == "Y":
                 _symfony_install()
 
@@ -96,16 +96,23 @@ def bootstrap():
             framework = "laravel"
             _set_vhost(framework)
             #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n):") )
+            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
             if option == "y" or option == "Y":
                 _laravel_install()
         if option == "4":
             framework = "drupal"
             _set_vhost(framework)
             #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n):") )
+            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
             if option == "y" or option == "Y":
                 _drupal_install()
+        if option == "5":
+            framework = "prestashop"
+            _set_vhost(framework)
+            #Install new proyect
+            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
+            if option == "y" or option == "Y":
+                _prestashop_install()
 
 
 def _cakephp_install():
@@ -172,13 +179,33 @@ def _drupal_install():
     print "Delete project..."
     run('rm -rf {public_dir}*'.format(**env))
     run('find {public_dir} -name ".*" -delete'.format(**env))
-    #Downloads Laravel
+    #Downloads Drupal
     print "Downloading Drupal..."
     with cd(env.public_dir):
         urun('wget https://github.com/drupal/drupal/archive/{version}.tar.gz'.format(**env))
         urun('tar -xzvf {version}.tar.gz'.format(**env))
         urun('mv drupal-{version}/* .'.format(**env))
         urun('rm -rf drupal-{version}'.format(**env))
+
+    run("mkdir {public_dir}database".format(**env))
+
+
+def _prestashop_install():
+    """
+    Downloads the Prestashop version specified in settings.json and installs the database.
+    """
+    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
+
+    print "Delete project..."
+    run('rm -rf {public_dir}*'.format(**env))
+    run('find {public_dir} -name ".*" -delete'.format(**env))
+    #Downloads PrestaShop
+    print "Downloading PrestaShop..."
+    with cd(env.public_dir):
+        urun('wget https://github.com/PrestaShop/PrestaShop/archive/{version}.tar.gz'.format(**env))
+        urun('tar -xzvf {version}.tar.gz'.format(**env))
+        urun('mv PrestaShop-{version}/* .'.format(**env))
+        urun('rm -rf PrestaShop-{version}'.format(**env))
 
     run("mkdir {public_dir}database".format(**env))
 
@@ -326,16 +353,10 @@ def set_webserver(webserver="nginx"):
     if webserver == "apache2":
         sudo("service nginx stop")
         sudo("a2enmod rewrite")
-        with open('chuy/defaults/htaccess') as htaccess:
-            urun(" echo '{0}' > {1}.htaccess".
-                 format(htaccess.read(), env.public_dir))
-
         sudo("service apache2 start", pty=False)
 
     else:
         sudo("service apache2 stop")
-        if exists("{0}.htaccess".format(env.public_dir)):
-            urun("rm {0}.htaccess".format(env.public_dir))
         sudo("service nginx start")
 
     print "Web server switched to " + blue(webserver, bold=True) + "."
