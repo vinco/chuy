@@ -336,7 +336,7 @@ def sync_files(delete=False):
     ursync_project(
         local_dir='./{src}/'.format(**env),
         remote_dir=env.public_dir,
-        exclude='./{exclude}/'.format(**env),
+        exclude=env.exclude,
         delete=delete,
         default_opts='-chrtvzP'
     )
