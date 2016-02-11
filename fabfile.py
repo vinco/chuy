@@ -326,6 +326,21 @@ def reset_all():
 
 
 @task
+def drop_all_tables():
+    """
+    Drops all tables from database without delete database.
+    """
+    require('dbname', 'dbuser', 'dbpassword', 'dbhost')
+    print "Dropping tables..."
+    run("""
+        (echo 'SET foreign_key_checks = 0;';
+        (mysqldump -u{dbuser} -p\"{dbpassword}\" --add-drop-table --no-data {dbname} | grep ^DROP);
+        echo 'SET foreign_key_checks = 1;') | \\
+        mysql --user={dbuser} --password=\"{dbpassword}\" -b {dbname} --host={dbhost}
+        """.format(**env))
+
+
+@task
 def sync_files(delete=False):
     """
     Sync modified files and establish necessary permissions in selected environment.
