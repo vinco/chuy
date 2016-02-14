@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+system("cat chuy/logo")
 Vagrant.configure("2") do |config|
 
     environments_json_path = "environments.json"
@@ -29,6 +30,7 @@ Vagrant.configure("2") do |config|
     config.nfs.map_uid = Process.uid
     config.nfs.map_gid = Process.gid
     config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root", :nfs => true
+    config.vm.synced_folder "database", "/home/vagrant/database", id: "vagrant-root", :nfs => true
 
     # Provider
     config.vm.provider "virtualbox" do |v|
