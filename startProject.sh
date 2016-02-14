@@ -14,12 +14,8 @@ if [[ ! -d "$DIR/../app" ]]; then
     mkdir $DIR/../app
 fi
 
-if [[ ! -d "$DIR/../app/database" ]]; then
-    mkdir $DIR/../app/database
-fi
-
-if [[ ! -d "$DIR/../app/database" ]]; then
-    mkdir $DIR/../app/webroot
+if [[ ! -d "$DIR/../database" ]]; then
+    mkdir $DIR/../database
 fi
 
 echo "Setting configuration files"
