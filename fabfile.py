@@ -259,7 +259,7 @@ def import_data(file_name="data.sql"):
     print "Importing data from file: " + blue(file_name, bold=True) + "..."
     run("""
         mysql -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost} <\
-        {public_dir}database/{file_name} """.format(**env))
+        ~/database/{file_name} """.format(**env))
 
 
 @task
@@ -277,7 +277,7 @@ def export_data(file_name="data.sql", just_data=False):
     else:
         env.just_data = " "
 
-    if exists('{public_dir}database/{file_name}'.format(**env)):
+    if exists('~/database/{file_name}'.format(**env)):
         export = confirm(
             yellow(
                 '{public_dir}database/{file_name} '.format(**env)

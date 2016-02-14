@@ -16,6 +16,7 @@ PACKAGES="$PACKAGES php-apc php5-curl php5-mcrypt php5-memcached fcgiwrap php5-m
 PACKAGES="$PACKAGES php5-intl"
 
 PUBLIC_DIRECTORY="/home/vagrant/public_www"
+DATABASE_DIRECTORY="/home/vagrant/database"
 
 # Sets mysql pasword
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
@@ -32,6 +33,10 @@ update-rc.d php5-fpm defaults
 # Public folder
 if [ ! -d "$PUBLIC_DIRECTORY" ]; then
     mkdir $PUBLIC_DIRECTORY
+fi
+# database folder
+if [ ! -d "$DATABASE_DIRECTORY" ]; then
+    mkdir $DATABASE_DIRECTORY
 fi
 
 Installing composer
