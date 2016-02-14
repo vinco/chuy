@@ -71,180 +71,39 @@ def bootstrap():
     while framework == "":
         print blue("Select project:")
         option  = raw_input( blue("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n4) Drupal\n5) Prestashop\n>>") )
-
         if option == "0":
             framework = "default"
-            _set_vhost(framework)
-
         if option == "1":
             framework = "cakephp"
-            _set_vhost(framework)
-            #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
-            if option == "y" or option == "Y":
-                _cakephp_install()
-
         if option == "2":
             framework = "symfony"
-            _set_vhost(framework)
-            #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
-            if option == "y" or option == "Y":
-                _symfony_install()
-
         if option == "3":
             framework = "laravel"
-            _set_vhost(framework)
-            #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
-            if option == "y" or option == "Y":
-                _laravel_install()
         if option == "4":
             framework = "drupal"
-            _set_vhost(framework)
-            #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
-            if option == "y" or option == "Y":
-                _drupal_install()
         if option == "5":
             framework = "prestashop"
-            _set_vhost(framework)
-            #Install new proyect
-            option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
-            if option == "y" or option == "Y":
-                _prestashop_install()
+
+        env.framework = framework
+        print blue("Setign vhost...")
+        _set_vhost(framework)
+        #Install new proyect
+        option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
+        if option == "y" or option == "Y":
+            state.output['stdout'] = True
+            run('bash cli/chuy.sh {framework}_install {public_dir} {version}'.format(**env))
 
 
-def _cakephp_install():
-    """
-    Downloads the cakephp/app (Skeleton) version specified in settings.json and installs the database.
-    """
-    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
-
-    print "Delete project..."
-    run('rm -rf {public_dir}*'.format(**env))
-    run('find {public_dir} -name ".*" -delete'.format(**env))
-    #Downloads Skeleton
-    print "Downloading cakephp application skeleton..."
-    state.output['stdout'] = True
-    run('composer create-project --prefer-dist cakephp/app public_www "{version}"'.format(**env))
-
-    run("sed -i \"218s/'username' => '.*'/'username' => '{dbuser}'/g\" {public_dir}config/app.php".format(**env))
-    run("sed -i \"219s/'password' => '.*'/'password' => '{dbpassword}'/g\" {public_dir}config/app.php".format(**env))
-    run("sed -i \"220s/'database' => '.*'/'database' => '{dbname}'/g\" {public_dir}config/app.php".format(**env))
-
-    run("mkdir {public_dir}database".format(**env))
-
-
-def _symfony_install():
-    """
-    Downloads the Symfony version specified in settings.json and installs the database.
-    """
-    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
-
-    print "Delete project..."
-    run('rm -rf {public_dir}*'.format(**env))
-    run('find {public_dir} -name ".*" -delete'.format(**env))
-    #Downloads Symfony
-    state.output['stdout'] = True
-    print "Downloading Symfony..."
-    run('composer create-project symfony/framework-standard-edition public_www "{version}"'.format(**env))
-
-    run("mkdir {public_dir}database".format(**env))
-
-
-def _laravel_install():
-    """
-    Downloads the Laravel version specified in settings.json and installs the database.
-    """
-    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
-
-    print "Delete project..."
-    run('rm -rf {public_dir}*'.format(**env))
-    run('find {public_dir} -name ".*" -delete'.format(**env))
-    #Downloads Laravel
-    state.output['stdout'] = True
-    print "Downloading Laravel..."
-    run('composer create-project --prefer-dist laravel/laravel public_www'.format(**env))
-
-    run("mkdir {public_dir}database".format(**env))
-
-
-def _drupal_install():
-    """
-    Downloads the Drupal version specified in settings.json and installs the database.
-    """
-    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
-
-    print "Delete project..."
-    run('rm -rf {public_dir}*'.format(**env))
-    run('find {public_dir} -name ".*" -delete'.format(**env))
-    #Downloads Drupal
-    print "Downloading Drupal..."
-    with cd(env.public_dir):
-        urun('wget https://github.com/drupal/drupal/archive/{version}.tar.gz'.format(**env))
-        urun('tar -xzvf {version}.tar.gz'.format(**env))
-        urun('mv drupal-{version}/* .'.format(**env))
-        urun('rm -rf drupal-{version}'.format(**env))
-
-    run("mkdir {public_dir}database".format(**env))
-
-
-def _prestashop_install():
-    """
-    Downloads the Prestashop version specified in settings.json and installs the database.
-    """
-    require('cpchuy_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword', 'version')
-
-    print "Delete project..."
-    run('rm -rf {public_dir}*'.format(**env))
-    run('find {public_dir} -name ".*" -delete'.format(**env))
-    #Downloads PrestaShop
-    print "Downloading PrestaShop..."
-    with cd(env.public_dir):
-        urun('wget https://github.com/PrestaShop/PrestaShop/archive/{version}.tar.gz'.format(**env))
-        urun('tar -xzvf {version}.tar.gz'.format(**env))
-        urun('mv PrestaShop-{version}/* .'.format(**env))
-        urun('rm -rf PrestaShop-{version}'.format(**env))
-
-    run("mkdir {public_dir}database".format(**env))
-
-
+@task
 def _set_vhost(template="cakephp"):
     """
-    Downloads the cakephp version specified in settings.json and installs the database.
+    Set vhost
     """
     print "Update template..."
 
     env.template = template
     run("sudo cp /home/vagrant/templates/{template}.nginx /etc/nginx/sites-available/chuy".format(**env))
     run("sudo service nginx restart")
-
-
-@task
-def nodejs_install():
-    """
-    Install node, grount, bower
-    """
-    require('public_dir')
-
-    print "Install cakephp vendor version..."
-    run('sudo apt-get install software-properties-common')
-    run('sudo apt-get install python-software-properties')
-    run('sudo apt-add-repository ppa:chris-lea/node.js')
-    run('sudo apt-get update')
-
-    run('sudo apt-get install -y nodejs')
-
-    run('sudo npm install -g bower')
-
-    run('sudo npm -g install grunt')
-    run('sudo npm install -g grunt-cli')
-    run('sudo chown -R vagrant:vagrant /usr/lib/node_modules')
-    run('sudo chown -R vagrant:vagrant /home/vagrant/.npm')
-
-    run('sudo gem install compass')
-    run('sudo gem install sass')
 
 
 @task

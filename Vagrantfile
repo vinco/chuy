@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
     #provisioning
     config.vm.provision "shell", path: "chuy/provision/preprovision.sh"
     config.vm.provision "file", source:"chuy/provision/templates/", destination: "/home/vagrant/templates/"
+    config.vm.provision "file", source:"chuy/cli/", destination: "/home/vagrant/cli/"
     config.vm.provision "shell", path: "chuy/provision/provision.sh"
 
     # Private IP
