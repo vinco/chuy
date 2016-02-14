@@ -103,6 +103,7 @@ def _set_vhost(template="cakephp"):
 
     env.template = template
     run("sudo cp /home/vagrant/templates/{template}.nginx /etc/nginx/sites-available/chuy".format(**env))
+    run("sudo cp /home/vagrant/templates/{template}.apache /etc/apache2/sites-available/chuy".format(**env))
     run("sudo service nginx restart")
 
 
