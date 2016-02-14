@@ -19,6 +19,7 @@ def environment(env_name, debug=False):
     """
     Creates the configurations for the environment in which tasks will run.
     """
+    env.env_name = env_name
     schemas_dir = "chuy/json_schemas/"
     state.output['running'] = boolean(debug)
     state.output['stdout'] = boolean(debug)
@@ -59,6 +60,9 @@ def bootstrap():
     """
     require('dbname', 'dbuser', 'dbpassword', 'dbhost')
     print "Creating local environment."
+    # Create user if environment is vagrant
+    if env.env_name == "vagrant":
+        run('bash cli/chuy.sh mysql_create_user {dbuser} {dbpassword}'.format(**env))
     # Creates database
     run("""
         echo "DROP DATABASE IF EXISTS {dbname}; CREATE DATABASE {dbname};

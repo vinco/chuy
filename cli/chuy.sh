@@ -60,7 +60,6 @@ prestashop_install() {
     rm -rf PrestaShop-$version $version.tar.gz
 }
 
-
 # NodeJS
 # Install node, grount, bower
 nodejs_install() {
@@ -78,6 +77,15 @@ nodejs_install() {
     sudo gem install sass
 }
 
-# call arguments verbatim:
+# MySQL
+# Create user to environment vagrant
+mysql_create_user(){
+    user=$1
+    password=$2
+    mysql -uroot -ppassword -e "DROP USER '$user'@'localhost'"
+    mysql -uroot -ppassword -e "CREATE USER '$user'@'localhost' IDENTIFIED BY '$password'"
+    mysql -uroot -ppassword -e "GRANT ALL PRIVILEGES ON * . * TO '$user'@'localhost'"
+}
 
+# call arguments verbatim:
 $@
