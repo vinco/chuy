@@ -27,10 +27,8 @@ Vagrant.configure("2") do |config|
     config.hostsupdater.aliases = ["chuy.local", vagrant_config['url']]
 
     # Shared folders.
-    config.nfs.map_uid = Process.uid
-    config.nfs.map_gid = Process.gid
-    config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root", :nfs => true
-    config.vm.synced_folder "database", "/home/vagrant/database", id: "vagrant-root", :nfs => true
+    config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root"
+    config.vm.synced_folder "database", "/home/vagrant/database", id: "vagrant-jefecito"
 
     # Provider
     config.vm.provider "virtualbox" do |v|
