@@ -39,7 +39,7 @@ if [ ! -d "$DATABASE_DIRECTORY" ]; then
     mkdir $DATABASE_DIRECTORY
 fi
 
-Installing composer
+# Installing composer
 curl -sS https://getcomposer.org/installer | php
 chmod +x composer.phar
 mv composer.phar /usr/local/bin/composer
@@ -56,7 +56,7 @@ cp /home/vagrant/templates/default.apache /etc/apache2/sites-available/chuy
 cp /home/vagrant/templates/httpd.conf /etc/apache2/conf.d/httpd.conf
 a2enmod actions
 a2dissite default
-a2ensite cakephp
+a2ensite default
 service apache2 stop
 
 # Nginx
@@ -68,3 +68,7 @@ rm  /etc/nginx/sites-enabled/*
 ln -s /etc/nginx/sites-available/chuy /etc/nginx/sites-enabled/
 service php5-fpm restart
 service nginx restart
+
+# Mysql create user chuy
+mysql -u"root" -p"password" -e "CREATE USER 'chuy'@'localhost' IDENTIFIED BY 'password'"
+mysql -u"root" -p"password" -e "GRANT ALL PRIVILEGES ON * . * TO 'chuy'@'localhost' WITH GRANT OPTION"

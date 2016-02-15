@@ -82,9 +82,14 @@ nodejs_install() {
 mysql_create_user(){
     user=$1
     password=$2
-    mysql -uroot -ppassword -e "DROP USER '$user'@'localhost'"
-    mysql -uroot -ppassword -e "CREATE USER '$user'@'localhost' IDENTIFIED BY '$password'"
-    mysql -uroot -ppassword -e "GRANT ALL PRIVILEGES ON * . * TO '$user'@'localhost'"
+    if [ "$user" != "chuy" ]
+    then
+        mysql -u"chuy" -p"password" -e "DROP USER '$user'@'localhost'"
+        mysql -u"chuy" -p"password" -e "CREATE USER '$user'@'localhost' IDENTIFIED BY '$password'"
+        mysql -u"chuy" -p"password" -e "GRANT ALL PRIVILEGES ON * . * TO '$user'@'localhost'"
+    else
+        echo "The dbuser can not be 'chuy'"
+    fi
 }
 
 # call arguments verbatim:

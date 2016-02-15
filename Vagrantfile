@@ -1,9 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-system("cat chuy/logo")
 Vagrant.configure("2") do |config|
 
+    system("cat chuy/logo")
     environments_json_path = "environments.json"
     vagrant_config = (JSON.parse(File.read(environments_json_path)))['vagrant']
 
