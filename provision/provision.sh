@@ -54,6 +54,8 @@ fi
 # Apache
 cp /home/vagrant/templates/default.apache /etc/apache2/sites-available/chuy
 cp /home/vagrant/templates/httpd.conf /etc/apache2/conf.d/httpd.conf
+rm  /etc/apache2/sites-enabled/*
+ln -s /etc/apache2/sites-available/chuy /etc/apache2/sites-enabled/
 a2enmod actions
 a2dissite default
 a2ensite default
