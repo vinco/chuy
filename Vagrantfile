@@ -3,7 +3,6 @@
 
 Vagrant.configure("2") do |config|
 
-    system("cat chuy/logo")
     environments_json_path = "environments.json"
     vagrant_config = (JSON.parse(File.read(environments_json_path)))['vagrant']
 
@@ -34,6 +33,11 @@ Vagrant.configure("2") do |config|
     config.vm.provider "virtualbox" do |v|
         v.memory = 1024
         v.cpus = 2
+    end
+
+    # Triggers
+    config.trigger.after :up do
+        print File.read("chuy/logo")
     end
 
 end
