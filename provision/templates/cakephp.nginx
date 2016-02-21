@@ -23,3 +23,9 @@ server {
         deny all;
     }
 }
+
+server {
+    listen   80;
+    server_name default_server;
+    rewrite ^(.*) default_server$1 permanent;
+}
