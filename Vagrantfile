@@ -27,7 +27,11 @@ Vagrant.configure("2") do |config|
     config.hostsupdater.aliases = ["chuy.local", vagrant_config['url']]
 
     # Shared folders.
-    config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root"
+    config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root",
+        owner: "vagrant",
+        group: "www-data",
+        mount_options: ["dmode=775,fmode=764"]
+
     config.vm.synced_folder "database", "/home/vagrant/database", id: "vagrant-jefecito"
 
     # Provider
