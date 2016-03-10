@@ -6,6 +6,7 @@ PHP Workflow project
 
 + [Vagrant](http://www.vagrantup.com/)
 + [Vagrant hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater)
++ [Vagrant triggers](https://github.com/emyl/vagrant-triggers)
 + [Python](http://www.python.org/)
 + [Fabric](http://www.fabfile.org/)
 + [fabutils](https://github.com/vinco/fabutils)
