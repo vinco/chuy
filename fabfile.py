@@ -213,7 +213,7 @@ def sync_files(delete=False):
 
     print white("Uploading code to server...", bold=True)
     ursync_project(
-        local_dir='./{src}/'.format(**env),
+        local_dir="'./{src}/'".format(**env),
         remote_dir=env.public_dir,
         exclude=env.exclude,
         delete=delete,
