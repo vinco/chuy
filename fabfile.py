@@ -122,7 +122,7 @@ def import_data(file_name="data.sql"):
 
     print "Importing data from file: " + blue(file_name, bold=True) + "..."
     run("""
-        mysql -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost} <\
+        mysql -u {dbuser} -p'{dbpassword}' {dbname} --host={dbhost} <\
         ~/database/{file_name} """.format(**env))
 
 
@@ -144,7 +144,7 @@ def export_data(file_name="data.sql", just_data=False):
     if exists('~/database/{file_name}'.format(**env)):
         export = confirm(
             yellow(
-                '{public_dir}database/{file_name} '.format(**env)
+                '~/database/{file_name} '.format(**env)
                 +
                 'already exists, Do you want to overwrite it?'
             )
@@ -154,8 +154,8 @@ def export_data(file_name="data.sql", just_data=False):
         print "Exporting data to file: " + blue(file_name, bold=True) + "..."
         run(
             """
-            mysqldump -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost}\
-            {just_data} > {public_dir}database/{file_name}
+            mysqldump -u {dbuser} -p'{dbpassword}' {dbname} --host={dbhost}\
+            {just_data} > ~/database/{file_name}
             """.format(**env)
         )
     else:
@@ -173,7 +173,7 @@ def resetdb():
     run("""
         echo "DROP DATABASE IF EXISTS {dbname};
         CREATE DATABASE {dbname};
-        "|mysql --batch --user={dbuser} --password=\"{dbpassword}\" --host={dbhost}
+        "|mysql --batch --user={dbuser} --password='{dbpassword}' --host={dbhost}
         """.format(**env))
 
 
@@ -198,9 +198,9 @@ def drop_all_tables():
     print "Dropping tables..."
     run("""
         (echo 'SET foreign_key_checks = 0;';
-        (mysqldump -u{dbuser} -p\"{dbpassword}\" --add-drop-table --no-data {dbname} | grep ^DROP);
+        (mysqldump -u{dbuser} -p'{dbpassword}' --add-drop-table --no-data {dbname} | grep ^DROP);
         echo 'SET foreign_key_checks = 1;') | \\
-        mysql --user={dbuser} --password=\"{dbpassword}\" -b {dbname} --host={dbhost}
+        mysql --user={dbuser} --password='{dbpassword}' -b {dbname} --host={dbhost}
         """.format(**env))
 
 
