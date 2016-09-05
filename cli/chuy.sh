@@ -30,6 +30,17 @@ symfony_install() {
     composer create-project symfony/framework-standard-edition $public_dir $version
 }
 
+# Laravel
+# Downloads the Laravel version specified in settings.json and installs the database.
+laravel_install() {
+    public_dir=$1
+    version=$2
+    delete_proyect
+    # Downloads Laravel
+    echo "Downloading laravel.."
+    composer create-project --prefer-dist laravel/laravel $public_dir $version
+}
+
 # Drupal
 # Downloads the Drupal version specified in settings.json and installs the database.
 drupal_install() {
