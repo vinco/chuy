@@ -3,17 +3,23 @@
 apt-get update
 
 apt-get install python-software-properties --assume-yes
-add-apt-repository ppa:ondrej/php5-oldstable
+add-apt-repository ppa:ondrej/php
 
 apt-get update
 
 
 # Configurations
 
-PACKAGES="php5 mysql-client mysql-server php5-mysql apache2 tree vim curl git"
-PACKAGES="$PACKAGES nginx-full php5-fpm php5-cgi spawn-fcgi php-pear php5-gd libapache2-mod-php5"
-PACKAGES="$PACKAGES php-apc php5-curl php5-mcrypt php5-memcached fcgiwrap php5-mcrypt"
-PACKAGES="$PACKAGES php5-intl"
+PACKAGES="apache2 \
+  curl \
+  fcgiwrap \
+  git \
+  mysql-client \
+  mysql-server \
+  nginx-full \
+  spawn-fcgi \
+  tree \
+  vim"
 
 PUBLIC_DIRECTORY="/home/vagrant/public_www"
 DATABASE_DIRECTORY="/home/vagrant/database"
@@ -28,7 +34,7 @@ apt-get install $PACKAGES --assume-yes
 
 # Makes apache not init in start
 update-rc.d -f  apache2 remove
-update-rc.d php5-fpm defaults
+update-rc.d php5.6-fpm defaults
 
 # Public folder
 if [ ! -d "$PUBLIC_DIRECTORY" ]; then
@@ -63,12 +69,12 @@ service apache2 stop
 
 # Nginx
 cp /home/vagrant/templates/default.nginx /etc/nginx/sites-available/chuy
-cp /home/vagrant/templates/www.conf /etc/php5/fpm/pool.d/www.conf
+cp /home/vagrant/templates/www.conf /etc/php/5.6/fpm/pool.d/www.conf
 cp /home/vagrant/templates/nginx.conf /etc/nginx/nginx.conf
 cp /home/vagrant/templates/nginx.conf /home/vagrant/nginx.conf
 rm  /etc/nginx/sites-enabled/*
 ln -s /etc/nginx/sites-available/chuy /etc/nginx/sites-enabled/
-service php5-fpm restart
+service php5.6-fpm restart
 service nginx restart
 
 # Mysql create user chuy
