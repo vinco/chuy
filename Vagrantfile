@@ -9,8 +9,7 @@ Vagrant.configure("2") do |config|
     settings_json_path = "settings.json"
     vagrant_settings = (JSON.parse(File.read(settings_json_path)))
 
-    config.vm.box = "precise32"
-    config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    config.vm.box = "ubuntu/trusty64"
 
     #provisioning
     config.vm.provision "shell", path: "chuy/provision/preprovision.sh"
