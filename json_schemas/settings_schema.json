@@ -11,10 +11,6 @@
         "version": {
             "description": "project version",
             "type": "string"
-        },
-        "locale": {
-            "description": "languaje setting",
-            "type": "string"
         }
     },
     "required": [ "src", "version", "locale" ]
