@@ -319,7 +319,7 @@ def execute(command=""):
 
 
 @task
-def install_php6():
+def upgrade_php():
     print "Installing php 5.6..."
     state.output['stdout'] = True
     run('sudo apt-get remove -y libapache2-mod-php5')
