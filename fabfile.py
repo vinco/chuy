@@ -270,7 +270,7 @@ def backup(tarball_name='backup', just_data=False):
         run('mkdir {public_dir}backup/database/'.format(**env))
 
     run(
-        'mv {public_dir}/database/{tarball_name}.sql '.format(**env)
+        'mv ~/database/{tarball_name}.sql '.format(**env)
         +
         '{public_dir}/backup/database/'.format(**env)
     )
