@@ -31,6 +31,8 @@ def environment(env_name, debug=False):
             schemas_dir + "environment_schema.json"
         )
         env.is_vagrant = False
+        env.env_name = env_name
+        env.confirm_task = True
         if env_name == "vagrant":
             result = ulocal('vagrant ssh-config | grep IdentityFile',
                             capture=True)
@@ -59,6 +61,7 @@ def bootstrap():
     Creates the database, test information and enables rewrite.
     """
     require('dbname', 'dbuser', 'dbpassword', 'dbhost')
+    confirm_task()
     print "Creating local environment."
     # Create user if environment is vagrant
     if env.env_name == "vagrant":
@@ -117,6 +120,7 @@ def import_data(file_name="data.sql"):
     Imports the database to given file name. database/data.sql by default.
     """
     require('dbuser', 'dbpassword', 'dbhost')
+    confirm_task()
 
     env.file_name = file_name
 
@@ -169,6 +173,7 @@ def resetdb():
     Drops the database and recreate it.
     """
     require('dbname', 'dbuser', 'dbpassword', 'dbhost')
+    confirm_task()
     print "Dropping database..."
     run("""
         echo "DROP DATABASE IF EXISTS {dbname};
@@ -180,9 +185,10 @@ def resetdb():
 @task
 def reset_all():
     """
-    Deletes all the cakephp installation and starts over.
+    Deletes all the source dir and starts over.
     """
     require('public_dir')
+    confirm_task()
     print "Deleting directory content: " + blue(env.public_dir, bold=True) + "..."
     run('rm -rf {public_dir}*'.format(**env))
     run('find {public_dir} -name ".*" -delete'.format(**env))
@@ -195,6 +201,7 @@ def drop_all_tables():
     Drops all tables from database without delete database.
     """
     require('dbname', 'dbuser', 'dbpassword', 'dbhost')
+    confirm_task()
     print "Dropping tables..."
     run("""
         (echo 'SET foreign_key_checks = 0;';
@@ -318,11 +325,11 @@ def execute(command=""):
         run('{command}'.format(**env))
 
 
-@task
-def upgrade_php():
-    print "Installing php 5.6..."
-    state.output['stdout'] = True
-    run('sudo apt-get remove -y libapache2-mod-php5')
-    run('sudo add-apt-repository ppa:ondrej/php')
-    run('sudo apt-get update')
-    run('sudo apt-get -y install php5.6 php5.6-mcrypt php5.6-mbstring php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-xsl php5.6-zip')
+def confirm_task(error_message = "Environment is not equals"):
+    if not env.is_vagrant and env.confirm_task :
+        env_name = raw_input("Confirm environment:")
+        if env.env_name != env_name :
+            print error_message
+            sys.exit(0)
+        else:
+            env.confirm_task = False
