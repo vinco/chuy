@@ -131,7 +131,7 @@ def import_data(file_name="data.sql"):
 
 
 @task
-def export_data(file_name="data.sql", just_data=False):
+def export_data(file_name="data.sql", just_data=False, confirm_overwriting=True):
     """
     Exports the database to given file name. database/data.sql by default.
     """
@@ -140,19 +140,23 @@ def export_data(file_name="data.sql", just_data=False):
     export = True
 
     env.file_name = file_name
-    if just_data:
+    if boolean(just_data):
         env.just_data = "--no-create-info"
     else:
         env.just_data = " "
 
-    if exists('~/database/{file_name}'.format(**env)):
-        export = confirm(
-            yellow(
-                '~/database/{file_name} '.format(**env)
-                +
-                'already exists, Do you want to overwrite it?'
+    if not exists('~/database/'.format(**env)):
+        run('mkdir ~/database/'.format(**env))
+
+    if boolean(confirm_overwriting):
+        if exists('~/database/{file_name}'.format(**env)):
+            export = confirm(
+                yellow(
+                    '~/database/{file_name} '.format(**env)
+                    +
+                    'already exists, Do you want to overwrite it?'
+                )
             )
-        )
 
     if export:
         print "Exporting data to file: " + blue(file_name, bold=True) + "..."
