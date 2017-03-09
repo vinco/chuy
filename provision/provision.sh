@@ -3,11 +3,15 @@
 apt-get update
 apt-get install python-software-properties --assume-yes
 add-apt-repository ppa:ondrej/php
+# Add apt repository mariadb 10.1[Stable]
+sudo apt-get install python-software-properties
+sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+sudo add-apt-repository 'deb [arch=amd64,i386] http://ca.mirror.babylon.network/mariadb/repo/10.1/ubuntu precise main'
 apt-get update
 
 # Configurations
 
-PACKAGES="php5.6 mysql-client mysql-server php5.6-mysql apache2 tree vim curl git"
+PACKAGES="php5.6 mysql-client mariadb-server php5.6-mysql apache2 tree vim curl git"
 PACKAGES="$PACKAGES nginx-full php5.6-fpm php5.6-cgi spawn-fcgi php-pear php5.6-mcrypt "
 PACKAGES="$PACKAGES php5.6-mbstring php5.6-curl php5.6-cli php5.6-gd php5.6-intl"
 PACKAGES="$PACKAGES php5.6-xsl php5.6-zip fcgiwrap phpmyadmin"
