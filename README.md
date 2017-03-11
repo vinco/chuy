@@ -49,7 +49,7 @@ PHP Workflow project
 After runing the setup, the default structure in your root directory will be as follows:
 
 ```bash
- . 
+ .
  ├── environments.json
  ├── settings.json
  ├── fabfile.py
@@ -125,7 +125,7 @@ Now you can install PHP framework on your vagrant machine by running the followi
 $ fab environment:vagrant bootstrap
 ```
 
-This will Create the database, install the version of PHP framework you specified. 
+This will Create the database, install the version of PHP framework you specified.
 If you get any errors durring the setup processes you will have to fix the error and then run "$ fab vagrant reset_all" which will clean up the failed installation and automatically re-run bootstrap.
 
 
