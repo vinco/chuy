@@ -67,35 +67,39 @@ def bootstrap():
     if env.env_name == "vagrant":
         run('bash cli/chuy.sh mysql_create_user {dbuser} {dbpassword}'.format(**env))
     # Creates database
-    run("""
-        echo "DROP DATABASE IF EXISTS {dbname}; CREATE DATABASE {dbname};
-        "|mysql --batch --user={dbuser} --password=\"{dbpassword}\" --host={dbhost}
-        """.format(**env))
+    option  = raw_input( blue("Reset database?[Y/n](default:n):") )
+    if option == "y" or option == "Y":
+        run("""
+            echo "DROP DATABASE IF EXISTS {dbname}; CREATE DATABASE {dbname};
+            "|mysql --batch --user={dbuser} --password=\"{dbpassword}\" --host={dbhost}
+            """.format(**env))
     # Enables apache module
     run('sudo a2enmod rewrite')
 
     framework = ""
     while framework == "":
         print blue("Select project:")
-        option  = raw_input( blue("0) Default\n1) CakePHP\n2) Symfony\n3) Laravel\n4) Drupal\n5) Prestashop\n>>") )
+        option  = raw_input( blue("0) Default\n1) CakePHP2.x\n2) CakePHP3.x\n3) Symfony\n4) Laravel\n5) Drupal\n6) Prestashop\n>>") )
         if option == "0":
             framework = "default"
         if option == "1":
-            framework = "cakephp"
+            framework = "cakephp2.x"
         if option == "2":
-            framework = "symfony"
+            framework = "cakephp"
         if option == "3":
-            framework = "laravel"
+            framework = "symfony"
         if option == "4":
-            framework = "drupal"
+            framework = "laravel"
         if option == "5":
+            framework = "drupal"
+        if option == "6":
             framework = "prestashop"
 
         env.framework = framework
-        print blue("Setign vhost...")
+        print blue("Setign {framework} vhost...".format(**env))
         _set_vhost(framework)
         #Install new proyect
-        option  = raw_input( blue("Install new project(Y/n)[default:n]:") )
+        option  = raw_input( blue("Install new project?[Y/n](default:n):") )
         if option == "y" or option == "Y":
             state.output['stdout'] = True
             run('bash cli/chuy.sh {framework}_install {public_dir} {version}'.format(**env))
