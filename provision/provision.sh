@@ -2,23 +2,21 @@
 
 apt-get update
 apt-get install python-software-properties --assume-yes
+# Install php5.6
+sudo apt-get purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 add-apt-repository ppa:ondrej/php
-# Add apt repository mariadb 10.1[Stable]
-sudo apt-get install python-software-properties
-sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
-sudo add-apt-repository 'deb [arch=amd64,i386] http://ca.mirror.babylon.network/mariadb/repo/10.1/ubuntu precise main'
 apt-get update
 
 # Configurations
-
-PACKAGES="php5.6 mysql-client mariadb-server php5.6-mysql apache2 tree vim curl git"
+PACKAGES="php5.6 mariadb-server libdbi-perl mariadb-client-10.0 php5.6-mysql apache2 tree vim curl git"
 PACKAGES="$PACKAGES nginx-full php5.6-fpm php5.6-cgi spawn-fcgi php-pear php5.6-mcrypt "
 PACKAGES="$PACKAGES php5.6-mbstring php5.6-curl php5.6-cli php5.6-gd php5.6-intl"
 PACKAGES="$PACKAGES php5.6-xsl php5.6-zip fcgiwrap phpmyadmin"
 
-PUBLIC_DIRECTORY="/home/vagrant/public_www"
-DATABASE_DIRECTORY="/home/vagrant/database"
-CHUY_DIRECTORY="/home/vagrant/chuy"
+PUBLIC_DIRECTORY="/home/ubuntu/public_www"
+DATABASE_DIRECTORY="/home/ubuntu/database"
+CHUY_DIRECTORY="/home/ubuntu/chuy"
+PHPMYADMIN_DIRECTORY="/home/ubuntu/chuy"
 
 # Sets mysql pasword
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
@@ -60,19 +58,21 @@ mv composer.phar /usr/local/bin/composer
 
 # Generates unique token for application
 if [ ! -f "$APP_TOKEN" ]; then
-:    touch $APP_TOKEN
+    touch $APP_TOKEN
     echo $RANDOM > $APP_TOKEN
 fi
 
 # Create a symbolic link from the installation phpmyadmin
-sudo ln -s /usr/share/phpmyadmin /home/vagrant/chuy
+if [ ! -d "$PHPMYADMIN_DIRECTORY" ]; then
+    ln -s /usr/share/phpmyadmin /home/ubuntu/chuy
+fi
 
 # Activates site
 
 ## Apache
-cp /home/vagrant/templates/chuy.apache /etc/apache2/sites-available/chuy
-cp /home/vagrant/templates/default.apache /etc/apache2/sites-available/site
-cp /home/vagrant/templates/httpd.conf /etc/apache2/conf.d/httpd.conf
+cp /home/ubuntu/templates/chuy.apache /etc/apache2/sites-available/chuy
+cp /home/ubuntu/templates/default.apache /etc/apache2/sites-available/site
+cp /home/ubuntu/templates/httpd.conf /etc/apache2/conf.d/httpd.conf
 rm  /etc/apache2/sites-enabled/*
 ln -s /etc/apache2/sites-available/chuy /etc/apache2/sites-enabled/
 a2enmod actions
@@ -81,11 +81,11 @@ a2ensite default
 service apache2 stop
 
 ## Nginx
-cp /home/vagrant/templates/chuy.nginx /etc/nginx/sites-available/chuy
-cp /home/vagrant/templates/default.nginx /etc/nginx/sites-available/site
-cp /home/vagrant/templates/www.conf /etc/php5.6/fpm/pool.d/www.conf
-cp /home/vagrant/templates/nginx.conf /etc/nginx/nginx.conf
-cp /home/vagrant/templates/nginx.conf /home/vagrant/nginx.conf
+cp /home/ubuntu/templates/chuy.nginx /etc/nginx/sites-available/chuy
+cp /home/ubuntu/templates/default.nginx /etc/nginx/sites-available/site
+cp /home/ubuntu/templates/www.conf /etc/php/5.6/fpm/pool.d/www.conf
+cp /home/ubuntu/templates/nginx.conf /etc/nginx/nginx.conf
+cp /home/ubuntu/templates/nginx.conf /home/ubuntu/nginx.conf
 rm  /etc/nginx/sites-enabled/*
 ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/chuy /etc/nginx/sites-enabled/

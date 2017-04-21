@@ -83,7 +83,7 @@ nodejs_install() {
     sudo npm -g install grunt
     sudo npm install -g grunt-cli
     sudo chown -R vagrant:vagrant /usr/lib/node_modules
-    sudo chown -R vagrant:vagrant /home/vagrant/.npm
+    sudo chown -R vagrant:vagrant /home/ubuntu/.npm
     sudo gem install compass
     sudo gem install sass
 }

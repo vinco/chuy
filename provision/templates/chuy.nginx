@@ -1,5 +1,5 @@
 server {
-    root /home/vagrant/chuy;
+    root /home/ubuntu/chuy;
     index index.php index.html index.htm;
 
     server_name chuy.local;

@@ -9,13 +9,12 @@ Vagrant.configure("2") do |config|
     settings_json_path = "settings.json"
     vagrant_settings = (JSON.parse(File.read(settings_json_path)))
 
-    config.vm.box = "precise32"
-    config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    config.vm.box = "ubuntu/xenial32"
 
     #provisioning
     config.vm.provision "shell", path: "chuy/provision/preprovision.sh"
-    config.vm.provision "file", source:"chuy/provision/templates/", destination: "/home/vagrant/templates/"
-    config.vm.provision "file", source:"chuy/cli/", destination: "/home/vagrant/cli/"
+    config.vm.provision "file", source:"chuy/provision/templates/", destination: "/home/ubuntu/templates/"
+    config.vm.provision "file", source:"chuy/cli/", destination: "/home/ubuntu/cli/"
     config.vm.provision "shell", path: "chuy/provision/provision.sh"
 
     # Private IP
@@ -26,12 +25,12 @@ Vagrant.configure("2") do |config|
     config.hostsupdater.aliases = ["chuy.local", vagrant_config['url']]
 
     # Shared folders.
-    config.vm.synced_folder vagrant_settings['src'], "/home/vagrant/public_www", id: "vagrant-root",
-        owner: "vagrant",
+    config.vm.synced_folder vagrant_settings['src'], "/home/ubuntu/public_www", id: "vagrant-root",
+        owner: "ubuntu",
         group: "www-data",
         mount_options: ["dmode=775,fmode=764"]
 
-    config.vm.synced_folder "database", "/home/vagrant/database", id: "vagrant-jefecito"
+    config.vm.synced_folder "database", "/home/ubuntu/database", id: "vagrant-jefecito"
 
     # Provider
     config.vm.provider "virtualbox" do |v|
